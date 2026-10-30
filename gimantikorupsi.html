@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Petualangan Nusa & Rara: Pahlawan Anti-Korupsi Cilik</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Inter & Fredoka / Comic style -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        nusa: {
+                            green: '#2ECC71',
+                            darkGreen: '#27AE60',
+                            yellow: '#F1C40F',
+                            orange: '#E67E22',
+                            blue: '#3498DB',
+                            purple: '#9B59B6',
+                            bgLight: '#E8F8F5'
+                        }
+                    },
+                    fontFamily: {
+                        fredoka: ['Fredoka', 'sans-serif'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(135deg, #a8e6cf 0%, #dbede3 50%, #ffd3b6 100%);
+            min-height: 100vh;
+            user-select: none;
+        }
+        h1, h2, h3, .font-heading {
+            font-family: 'Fredoka', cursive;
+        }
+        .card-shadow {
+            box-shadow: 0 10px 25px -5px rgba(46, 204, 113, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
+        .btn-bounce {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn-bounce:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+        .btn-bounce:active {
+            transform: translateY(1px) scale(0.98);
+        }
+        /* Custom Checkbox Animation */
+        .option-checkbox:checked + .option-box {
+            border-color: #2ECC71;
+            background-color: #E8F8F5;
+            transform: scale(1.01);
+        }
+        .option-checkbox:checked + .option-box .checkbox-icon {
+            background-color: #2ECC71;
+            border-color: #27AE60;
+            color: white;
+        }
+        /* Pulse Animation */
+        @keyframes pulse-slow {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        .animate-pulse-slow {
+            animation: pulse-slow 3s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen justify-between items-center p-3 md:p-6 overflow-x-hidden">
+
+    <!-- Header / Navbar -->
+    <header class="w-full max-w-4xl flex justify-between items-center bg-white/90 backdrop-blur-md px-6 py-3 rounded-3xl shadow-lg mb-4 border-2 border-emerald-200">
+        <div class="flex items-center gap-3 cursor-pointer" onclick="showScreen('home-screen')">
+            <div class="w-12 h-12 bg-emerald-500 rounded-2xl flex items-center justify-center text-white text-2xl font-bold shadow-md transform rotate-3">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <div>
+                <h1 class="text-xl md:text-2xl font-bold text-emerald-800 leading-none">Nusa & Rara</h1>
+                <p class="text-xs text-emerald-600 font-semibold tracking-wide">Pahlawan Anti-Korupsi Cilik</p>
+            </div>
+        </div>
+        <div class="flex items-center gap-2">
+            <button id="sound-toggle" onclick="toggleSound()" class="w-10 h-10 rounded-full bg-amber-100 hover:bg-amber-200 text-amber-700 flex items-center justify-center text-lg transition-all shadow-sm">
+                <i class="fa-solid fa-volume-high" id="sound-icon"></i>
+            </button>
+            <button onclick="showInstructions()" class="w-10 h-10 rounded-full bg-emerald-100 hover:bg-emerald-200 text-emerald-700 flex items-center justify-center text-lg transition-all shadow-sm" title="Petunjuk">
+                <i class="fa-solid fa-circle-question"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="w-full max-w-4xl flex-grow flex items-center justify-center relative">
+
+        <!-- ==================== HOME SCREEN ==================== -->
+        <section id="home-screen" class="w-full bg-white/95 rounded-3xl p-6 md:p-10 card-shadow border-4 border-emerald-100 text-center flex flex-col items-center">
+            
+            <!-- Character Canvas 3D Rendering Simulation -->
+            <div class="relative w-full max-w-md h-56 md:h-64 mb-4 flex items-center justify-center">
+                <canvas id="characterCanvas" class="w-full h-full rounded-2xl cursor-pointer" title="Klik karakter Nusa & Rara untuk melihat reaksinya!"></canvas>
+                <div class="absolute bottom-2 bg-white/80 backdrop-blur px-3 py-1 rounded-full text-xs text-emerald-700 font-medium shadow-sm">
+                    ✨ Klik Nusa & Rara untuk menyapa!
+                </div>
+            </div>
+
+            <h2 class="text-2xl md:text-4xl font-extrabold text-emerald-800 mb-2 font-heading">
+                Mari Menjadi Anak Jujur & Hebat!
+            </h2>
+            <p class="text-slate-600 text-sm md:text-base max-w-xl mb-6">
+                Bantu Nusa & Rara menyelesaikan berbagai tantangan kehidupan sehari-hari dengan mempraktikkan 9 Nilai Integritas Anti-Korupsi sejak dini!
+            </p>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-col sm:flex-row gap-4 w-full max-w-md justify-center">
+                <button onclick="startGame()" class="btn-bounce bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold text-lg px-8 py-4 rounded-2xl shadow-lg border-b-4 border-teal-800 flex items-center justify-center gap-3">
+                    <i class="fa-solid fa-play text-xl"></i> Mulai Bermain!
+                </button>
+                <button onclick="showProfiles()" class="btn-bounce bg-amber-400 hover:bg-amber-500 text-amber-900 font-bold text-lg px-6 py-4 rounded-2xl shadow-md border-b-4 border-amber-600 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-user-astronaut"></i> Profil Karakter
+                </button>
+            </div>
+
+            <!-- Mini Values Badges -->
+            <div class="mt-8 pt-6 border-t border-slate-100 w-full">
+                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">9 Nilai Integritas Anak Jujur</p>
+                <div class="flex flex-wrap justify-center gap-2 text-xs font-medium">
+                    <span class="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full">Jujur</span>
+                    <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">Disiplin</span>
+                    <span class="bg-amber-100 text-amber-800 px-3 py-1 rounded-full">Tanggung Jawab</span>
+                    <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full">Adil</span>
+                    <span class="bg-pink-100 text-pink-800 px-3 py-1 rounded-full">Kerja Keras</span>
+                    <span class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full">Sederhana</span>
+                    <span class="bg-teal-100 text-teal-800 px-3 py-1 rounded-full">Mandiri</span>
+                    <span class="bg-red-100 text-red-800 px-3 py-1 rounded-full">Berani</span>
+                    <span class="bg-orange-100 text-orange-800 px-3 py-1 rounded-full">Peduli</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== QUIZ SCREEN ==================== -->
+        <section id="quiz-screen" class="hidden w-full bg-white/95 rounded-3xl p-5 md:p-8 card-shadow border-4 border-emerald-100 flex-col">
+            
+            <!-- Quiz Header: Progress & Score -->
+            <div class="flex flex-wrap justify-between items-center gap-3 mb-4 bg-emerald-50 p-4 rounded-2xl border border-emerald-100">
+                <div class="flex items-center gap-3">
+                    <span id="question-badge" class="bg-emerald-500 text-white font-bold text-xs px-3 py-1.5 rounded-xl shadow-sm">
+                        Soal 1 / 10
+                    </span>
+                    <span id="value-badge" class="bg-amber-100 text-amber-800 font-semibold text-xs px-3 py-1.5 rounded-xl">
+                        Nilai: Kejujuran
+                    </span>
+                </div>
+                <div class="flex items-center gap-4">
+                    <!-- Score -->
+                    <div class="text-right">
+                        <span class="text-xs text-slate-500 block font-medium">Skor Anda</span>
+                        <span id="current-score" class="text-lg font-bold text-emerald-700">0</span>
+                    </div>
+                    <!-- Timer -->
+                    <div class="w-12 h-12 rounded-full border-4 border-amber-400 flex items-center justify-center font-bold text-amber-700 text-sm bg-amber-50 shadow-inner" id="timer-display">
+                        45s
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="w-full bg-slate-100 h-3 rounded-full overflow-hidden mb-6">
+                <div id="progress-bar" class="bg-gradient-to-r from-emerald-400 to-teal-500 h-full w-10/100 transition-all duration-300"></div>
+            </div>
+
+            <!-- Question Box -->
+            <div class="mb-6">
+                <div class="inline-block bg-blue-100 text-blue-800 font-bold text-xs px-3 py-1 rounded-lg mb-2">
+                    <i class="fa-solid fa-layer-group mr-1"></i> Soal Pilihan Ganda Kompleks (Pilih Semua Jawaban Benar)
+                </div>
+                <h3 id="question-text" class="text-lg md:text-xl font-bold text-slate-800 leading-snug">
+                    Teks pertanyaan akan tampil di sini...
+                </h3>
+            </div>
+
+            <!-- Options Container (Checkbox Multi Select) -->
+            <div id="options-container" class="space-y-3 mb-6">
+                <!-- Dynamic Options Loaded Here -->
+            </div>
+
+            <!-- Action Buttons Footer -->
+            <div class="flex justify-between items-center pt-4 border-t border-slate-100">
+                <p class="text-xs text-slate-400 flex items-center gap-1">
+                    <i class="fa-solid fa-circle-info text-amber-500"></i> Pilih 1 atau lebih jawaban tepat.
+                </p>
+                <button id="submit-btn" onclick="checkAnswer()" class="btn-bounce bg-emerald-500 hover:bg-emerald-600 text-white font-bold px-7 py-3 rounded-xl shadow-md flex items-center gap-2">
+                    Kirim Jawaban <i class="fa-solid fa-paper-plane"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- ==================== FEEDBACK MODAL ==================== -->
+        <div id="feedback-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+            <div class="bg-white rounded-3xl p-6 md:p-8 max-w-lg w-full text-center shadow-2xl transform transition-all border-4 border-emerald-200">
+                <div id="feedback-icon" class="w-20 h-20 rounded-full mx-auto flex items-center justify-center text-4xl mb-4 shadow-lg">
+                    <i class="fa-solid fa-check"></i>
+                </div>
+                <h3 id="feedback-title" class="text-2xl font-bold mb-2 font-heading">Luar Biasa!</h3>
+                <p id="feedback-score-text" class="text-sm font-bold text-emerald-600 mb-3">+100 Poin</p>
+                <div class="bg-slate-50 p-4 rounded-2xl text-left text-sm text-slate-700 mb-6 border border-slate-200 leading-relaxed max-h-48 overflow-y-auto">
+                    <span class="font-bold block mb-1 text-slate-800"><i class="fa-solid fa-lightbulb text-amber-500 mr-1"></i> Pembahasan Edukatif:</span>
+                    <p id="feedback-explanation">Penjelasan pembahasan akan muncul di sini.</p>
+                </div>
+                <button onclick="nextQuestion()" class="btn-bounce w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3.5 rounded-xl shadow-md text-base">
+                    Lanjut ke Soal Berikutnya <i class="fa-solid fa-arrow-right ml-1"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- ==================== SCORECARD / RESULT SCREEN ==================== -->
+        <section id="result-screen" class="hidden w-full bg-white/95 rounded-3xl p-6 md:p-10 card-shadow border-4 border-emerald-100 text-center flex-col items-center">
+            
+            <div class="w-24 h-24 bg-gradient-to-tr from-amber-400 to-yellow-300 text-white rounded-full flex items-center justify-center text-5xl mb-4 shadow-xl border-4 border-white animate-pulse-slow">
+                <i class="fa-solid fa-trophy"></i>
+            </div>
+
+            <h2 class="text-3xl md:text-4xl font-extrabold text-slate-800 mb-1 font-heading">
+                Laporan Hasil Belajar
+            </h2>
+            <p class="text-slate-500 text-sm mb-6">Petualangan Anti-Korupsi Nusa & Rara</p>
+
+            <!-- Score Badge Box -->
+            <div class="bg-gradient-to-r from-emerald-500 to-teal-600 text-white p-6 rounded-2xl w-full max-w-md shadow-lg mb-6">
+                <span class="text-xs font-semibold uppercase tracking-wider block opacity-90">Total Skor Akhir</span>
+                <span id="final-score" class="text-5xl font-extrabold my-1 block font-heading">0</span>
+                <div class="mt-2 inline-block bg-white/20 backdrop-blur px-4 py-1.5 rounded-full text-sm font-bold" id="predicate-badge">
+                    🏆 Pahlawan Anti-Korupsi Cilik
+                </div>
+            </div>
+
+            <!-- Analysis Summary -->
+            <div class="w-full max-w-md bg-slate-50 rounded-2xl p-4 border border-slate-200 mb-6 text-left">
+                <h4 class="font-bold text-slate-700 text-sm mb-3 flex items-center gap-2">
+                    <i class="fa-solid fa-chart-pie text-emerald-500"></i> Ringkasan Analisis Karakter:
+                </h4>
+                <div class="space-y-2 text-xs md:text-sm text-slate-600">
+                    <div class="flex justify-between border-b border-slate-200 pb-1.5">
+                        <span>Jumlah Soal Dijawab:</span>
+                        <span class="font-bold text-slate-800" id="total-answered">10 Soal</span>
+                    </div>
+                    <div class="flex justify-between border-b border-slate-200 pb-1.5">
+                        <span>Jawaban Sempurna (100% Benar):</span>
+                        <span class="font-bold text-emerald-600" id="correct-count">0</span>
+                    </div>
+                    <div class="flex justify-between border-b border-slate-200 pb-1.5">
+                        <span>Jawaban Sebagian Benar:</span>
+                        <span class="font-bold text-amber-600" id="partial-count">0</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Tingkat Integritas:</span>
+                        <span class="font-bold text-teal-600" id="integrity-percentage">0%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Result Buttons -->
+            <div class="flex flex-col sm:flex-row gap-4 w-full max-w-md">
+                <button onclick="startGame()" class="btn-bounce flex-1 bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3.5 rounded-xl shadow-md flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-rotate-right"></i> Coba Lagi
+                </button>
+                <button onclick="showScreen('home-screen')" class="btn-bounce flex-1 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-3.5 rounded-xl shadow-sm flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-house"></i> Ke Menu Utama
+                </button>
+            </div>
+        </section>
+
+        <!-- ==================== PROFILES MODAL / SCREEN ==================== -->
+        <div id="profile-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+            <div class="bg-white rounded-3xl p-6 md:p-8 max-w-xl w-full shadow-2xl border-4 border-amber-200 max-h-[90vh] overflow-y-auto">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-2xl font-bold text-slate-800 font-heading flex items-center gap-2">
+                        <i class="fa-solid fa-users text-amber-500"></i> Profil Nusa & Rara
+                    </h3>
+                    <button onclick="closeProfiles()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center font-bold">✕</button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <!-- Nusa -->
+                    <div class="bg-emerald-50 p-4 rounded-2xl border border-emerald-200 flex flex-col items-center text-center">
+                        <div class="w-20 h-20 bg-emerald-500 rounded-full flex items-center justify-center text-white text-3xl mb-3 shadow-md">
+                            👦🏻
+                        </div>
+                        <h4 class="font-bold text-lg text-emerald-900 font-heading">Nusa</h4>
+                        <p class="text-xs text-emerald-700 font-semibold mb-2">Anak yang Cerdas & Bertanggung Jawab</p>
+                        <p class="text-xs text-slate-600">Nusa selalu mengajarkan adik dan temannya untuk jujur, disiplin, dan berani membela kebenaran dalam situasi apa pun.</p>
+                    </div>
+
+                    <!-- Rara -->
+                    <div class="bg-amber-50 p-4 rounded-2xl border border-amber-200 flex flex-col items-center text-center">
+                        <div class="w-20 h-20 bg-amber-400 rounded-full flex items-center justify-center text-white text-3xl mb-3 shadow-md">
+                            👧🏻
+                        </div>
+                        <h4 class="font-bold text-lg text-amber-900 font-heading">Rara</h4>
+                        <p class="text-xs text-amber-700 font-semibold mb-2">Adik yang Ceria & Sederhana</p>
+                        <p class="text-xs text-slate-600">Rara anak yang bersemangat, selalu peduli pada sesama, dan senang belajar membedakan hal baik dan perbuatan curang.</p>
+                    </div>
+                </div>
+
+                <button onclick="closeProfiles()" class="btn-bounce w-full bg-amber-400 hover:bg-amber-500 text-amber-900 font-bold py-3 rounded-xl">
+                    Tutup Profil
+                </button>
+            </div>
+        </div>
+
+        <!-- ==================== INSTRUCTIONS MODAL ==================== -->
+        <div id="instruction-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+            <div class="bg-white rounded-3xl p-6 md:p-8 max-w-lg w-full shadow-2xl border-4 border-emerald-200">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-2xl font-bold text-slate-800 font-heading flex items-center gap-2">
+                        <i class="fa-solid fa-circle-info text-emerald-500"></i> Petunjuk Permainan
+                    </h3>
+                    <button onclick="closeInstructions()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center font-bold">✕</button>
+                </div>
+
+                <div class="space-y-3 text-sm text-slate-600 mb-6">
+                    <div class="flex items-start gap-3">
+                        <span class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 font-bold text-xs flex items-center justify-center shrink-0">1</span>
+                        <p>Kuis terdiri dari <b>10 soal cerita HOTS</b> (Higher Order Thinking Skills) berlandaskan 9 nilai integritas anak anti-korupsi.</p>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <span class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 font-bold text-xs flex items-center justify-center shrink-0">2</span>
+                        <p>Format Soal: <b>Pilihan Ganda Kompleks</b>. Setiap soal bisa memiliki <b>LEBIH DARI SATU</b> pilihan jawaban benar.</p>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <span class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 font-bold text-xs flex items-center justify-center shrink-0">3</span>
+                        <p>Pilihlah semua jawaban yang menurutmu benar dengan mencentang kotak pilihan, lalu klik <b>Kirim Jawaban</b>.</p>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <span class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 font-bold text-xs flex items-center justify-center shrink-0">4</span>
+                        <p>Setiap soal memiliki waktu <b>45 detik</b>. Setiap jawaban sempurna akan memberikan 100 poin!</p>
+                    </div>
+                </div>
+
+                <button onclick="closeInstructions()" class="btn-bounce w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 rounded-xl">
+                    Saya Mengerti!
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full max-w-4xl text-center py-3 text-xs text-emerald-800 font-semibold opacity-90">
+        Gim Edukasi Anti-Korupsi Nusa & Rara &copy; 2026. Mendidik Generasi Jujur, Berani, dan Bertanggung Jawab.
+    </footer>
+
+    <!-- ==================== JAVASCRIPT LOGIC ==================== -->
+    <script>
+        /* ================= WEB AUDIO API SYNTHESIZER ================= */
+        class SoundEffects {
+            constructor() {
+                this.ctx = null;
+                this.muted = false;
+            }
+
+            init() {
+                if (!this.ctx) {
+                    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+            }
+
+            playClick() {
+                if (this.muted) return;
+                this.init();
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(400, this.ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(800, this.ctx.currentTime + 0.08);
+                gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.01, this.ctx.currentTime + 0.08);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start();
+                osc.stop(this.ctx.currentTime + 0.08);
+            }
+
+            playCorrect() {
+                if (this.muted) return;
+                this.init();
+                const now = this.ctx.currentTime;
+                const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+                notes.forEach((freq, index) => {
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(freq, now + index * 0.08);
+                    gain.gain.setValueAtTime(0.2, now + index * 0.08);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + index * 0.08 + 0.2);
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    osc.start(now + index * 0.08);
+                    osc.stop(now + index * 0.08 + 0.2);
+                });
+            }
+
+            playWrong() {
+                if (this.muted) return;
+                this.init();
+                const now = this.ctx.currentTime;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(250, now);
+                osc.frequency.linearRampToValueAtTime(150, now + 0.25);
+                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start(now);
+                osc.stop(now + 0.25);
+            }
+
+            playWin() {
+                if (this.muted) return;
+                this.init();
+                const now = this.ctx.currentTime;
+                const melody = [392, 523.25, 659.25, 783.99, 880, 1046.50];
+                melody.forEach((freq, i) => {
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq, now + i * 0.12);
+                    gain.gain.setValueAtTime(0.2, now + i * 0.12);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.12 + 0.3);
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    osc.start(now + i * 0.12);
+                    osc.stop(now + i * 0.12 + 0.3);
+                });
+            }
+        }
+
+        const sound = new SoundEffects();
+
+        function toggleSound() {
+            sound.muted = !sound.muted;
+            const icon = document.getElementById('sound-icon');
+            if (sound.muted) {
+                icon.className = 'fa-solid fa-volume-xmark text-slate-400';
+            } else {
+                icon.className = 'fa-solid fa-volume-high text-amber-700';
+                sound.playClick();
+            }
+        }
+
+        /* ================= 10 SOAL KUIS HOTS ANTI-KORUPSI ================= */
+        const quizData = [
+            {
+                id: 1,
+                value: "Kejujuran & Integritas",
+                question: "Rara disuruh Ibu membeli bumbu dapur seharga Rp12.000 dengan uang pecahan Rp20.000. Penjual keliru memberikan uang kembalian sebesar Rp10.000 (seharusnya Rp8.000). Tindakan terpuji yang seharusnya dilakukan Rara adalah...",
+                options: [
+                    { text: "Mengembalikan sisa lebih Rp2.000 kepada penjual karena bukan haknya.", correct: true },
+                    { text: "Menyimpan sisa lebih Rp2.000 untuk membeli permen tanpa memberi tahu Ibu.", correct: false },
+                    { text: "Segera memberitahu Ibu secara jujur tentang kekeliruan kembalian tersebut.", correct: true },
+                    { text: "Pura-pura tidak tahu agar bisa mendapat uang jajan tambahan.", correct: false }
+                ],
+                explanation: "Kejujuran berarti mengembalikan apa yang bukan milik kita dan selalu berkata jujur kepada orang tua maupun penjual."
+            },
+            {
+                id: 2,
+                value: "Kejujuran & Tanggung Jawab",
+                question: "Saat ujian berlangsung, Nusa melihat teman sebangkunya membuka catatan tersembunyi. Di sisi lain, Nusa belum belajar maksimal. Pernyataan sikap yang mencerminkan integritas tinggi adalah...",
+                options: [
+                    { text: "Tetap fokus mengerjakan ujian sendiri sesuai kemampuan tanpa menyontek.", correct: true },
+                    { text: "Ikut meminta jawaban dari teman agar mendapat nilai sama bagusnya.", correct: false },
+                    { text: "Menolak tawaran bocoran jawaban dari teman dengan sopan.", correct: true },
+                    { text: "Melaporkan tindakan kecurangan tersebut kepada guru pengawas setelah ujian.", correct: true }
+                ],
+                explanation: "Menjaga kejujuran diri sendiri dan tidak terlibat kecurangan adalah bentuk nilai tanggung jawab dan integritas akademis."
+            },
+            {
+                id: 3,
+                value: "Fasilitas Publik & Anti-Nepotisme",
+                question: "Di sekolah terdapat komputer perpustakaan yang dikhususkan untuk belajar dan mencari tugas. Bagaimana cara Nusa dan kawan-kawan memanfaatkan fasilitas publik ini secara bijak?",
+                options: [
+                    { text: "Menggunakan komputer untuk menyelesaikan tugas kelompok sesuai antrean.", correct: true },
+                    { text: "Menggunakan komputer bermain game online hingga jam pulang sekolah.", correct: false },
+                    { text: "Memberikan kesempatan kepada siswa lain setelah selesai waktu pemakaian.", correct: true },
+                    { text: "Merawat serta menjaga kebersihan perangkat komputer yang digunakan.", correct: true }
+                ],
+                explanation: "Fasilitas publik harus dijaga, digunakan sesuai peruntukannya, dan tidak dimonopoli demi kepentingan pribadi."
+            },
+            {
+                id: 4,
+                value: "Menolak Gratifikasi Kecil",
+                question: "Nusa dipilih menjadi Ketua Kelas yang bertugas membagi jadwal piket. Seorang teman memberikan cokelat mewah agar diberi jadwal piket yang paling ringan. Sikap tepat Nusa adalah...",
+                options: [
+                    { text: "Menerima cokelat tersebut dan memberikan jadwal paling ringan.", correct: false },
+                    { text: "Menolak hadiah tersebut dengan sopan karena tugas harus dibagi secara adil.", correct: true },
+                    { text: "Menjelaskan kepada teman bahwa pembagian piket dilakukan berdasarkan kesepakatan bersama.", correct: true },
+                    { text: "Menerima hadiah tetapi tetap membagi tugas piket secara sembarangan.", correct: false }
+                ],
+                explanation: "Menerima imbalan/hadiah untuk mempengaruhi keputusan adalah bentuk gratifikasi yang harus ditolak demi keadilan."
+            },
+            {
+                id: 5,
+                value: "Keadilan & Kepedulian",
+                question: "Kelompok belajar Rara sedang membagi tugas membuat kerajinan tangan. Semua anggota ingin mendapat bagian tugas yang mudah. Langkah adil yang harus diambil kelompok adalah...",
+                options: [
+                    { text: "Membagi tugas sesuai dengan kemampuan dan keahlian masing-masing secara seimbang.", correct: true },
+                    { text: "Melakukan musyawarah mufakat agar semua anggota merasa diperlakukan adil.", correct: true },
+                    { text: "Mendorong semua beban pekerjaan kepada satu teman yang paling pintar.", correct: false },
+                    { text: "Saling membantu anggota kelompok yang mengalami kesulitan dalam tugasnya.", correct: true }
+                ],
+                explanation: "Keadilan diwujudkan melalui pembagian tugas yang seimbang lewat musyawarah dan saling peduli antaranggota."
+            },
+            {
+                id: 6,
+                value: "Disiplin & Ketertiban",
+                question: "Rara dan teman-temannya sedang mengantre makanan di kantin sekolah. Tiba-tiba ada teman deretan belakang yang ingin menyerobot antrean. Respon bijak yang menunjukkan nilai disiplin adalah...",
+                options: [
+                    { text: "Mengingatkan teman tersebut untuk membudayakan antre dari belakang.", correct: true },
+                    { text: "Membiarkannya menyerobot agar tidak terjadi pertengkaran.", correct: false },
+                    { text: "Tetap berdiri tertib pada barisan antrean tanpa ikut-ikutan menyerobot.", correct: true },
+                    { text: "Melaporkan dengan baik kepada penjaga kantin/guru jika ada yang sengaja melanggar ketertiban.", correct: true }
+                ],
+                explanation: "Disiplin mengantre melatih kesabaran, menghargai hak orang lain, dan menciptakan ketertiban umum."
+            },
+            {
+                id: 7,
+                value: "Kesederhanaan & Pengelolaan Uang",
+                question: "Nusa mendapat uang saku harian dari Ibu. Teman-temannya sering membeli mainan mahal yang sedang viral setiap hari. Bagaimana Nusa menerapkan nilai kesederhanaan?",
+                options: [
+                    { text: "Menyisihkan sebagian uang jajan untuk ditabung di celengan.", correct: true },
+                    { text: "Memaksa orang tua membelikan mainan mahal agar tidak kalah gengsi.", correct: false },
+                    { text: "Membeli barang sesuai kebutuhan prioritas, bukan sekadar keinginan.", correct: true },
+                    { text: "Memakai barang yang masih layak pakai dengan rasa syukur.", correct: true }
+                ],
+                explanation: "Gaya hidup sederhana menghindarkan kita dari sikap konsumtif, pemborosan, dan keinginan berbuat curang demi gengsi."
+            },
+            {
+                id: 8,
+                value: "Keberanian & Kepedulian",
+                question: "Di halaman sekolah, Rara melihat seorang murid senior memaksa meminta uang jajan adik kelas secara paksa (bullying). Tindakan berani dan benar yang patut dilakukan Rara adalah...",
+                options: [
+                    { text: "Segera memanggil dan melaporkan kejadian kepada guru piket atau pihak sekolah.", correct: true },
+                    { text: "Pura-pura tidak tahu dan langsung pergi meninggalkan tempat kejadian.", correct: false },
+                    { text: "Membantu korban dengan mengajaknya menjauh menuju area yang aman.", correct: true },
+                    { text: "Merekam kejadian lalu menyebarkannya di media sosial untuk mengejek.", correct: false }
+                ],
+                explanation: "Berani melaporkan kejahatan/pemerasan kepada pihak berwenang (guru) adalah bentuk kepedulian membela kebenaran."
+            },
+            {
+                id: 9,
+                value: "Transparansi & Akuntabilitas",
+                question: "Nusa dipercaya menjadi bendahara kas kelas. Setiap akhir bulan, Nusa harus mengelola laporan keuangan kas. Bentuk transparansi yang wajib Nusa lakukan adalah...",
+                options: [
+                    { text: "Mencatat setiap pemasukan dan pengeluaran uang kas secara rapi di buku catatannya.", correct: true },
+                    { text: "Menyimpan sisa uang kas untuk keperluan pribadi sementara waktu.", correct: false },
+                    { text: "Menempelkan atau membacakan laporan keuangan kas di papan tulis kelas secara terbuka.", correct: true },
+                    { text: "Menyimpan bukti struk/nota belanja barang kebutuhan kelas sebagai bukti sah.", correct: true }
+                ],
+                explanation: "Transparansi dan akuntabilitas dicapai dengan pencatatan terbuka, pembuktian transaksi, dan pelaporan yang jelas."
+            },
+            {
+                id: 10,
+                value: "Kemandirian & Kerja Keras",
+                question: "Rara mendapat tugas proyek membuat maket rumah adat. Temannya menawarkan jasa berbayar untuk membuatkan seluruh proyek tersebut agar Rara mendapat nilai A tanpa bersusah payah. Pilihan tepat Rara adalah...",
+                options: [
+                    { text: "Mengerjakan proyek sendiri dengan kreatif sesuai batas kemampuannya.", correct: true },
+                    { text: "Menerima tawaran teman agar tidak perlu repot belajar.", correct: false },
+                    { text: "Meminta bimbingan orang tua/guru jika ada bagian sulit, namun tetap dikerjakan sendiri.", correct: true },
+                    { text: "Bangga atas hasil karya sendiri meskipun tidak sempurna.", correct: true }
+                ],
+                explanation: "Kemandirian dan kerja keras membentuk pribadi yang tangguh, jujur, serta bangga akan proses belajarnya sendiri."
+            }
+        ];
+
+        /* ================= GAME STATE VARIABLES ================= */
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let timer = null;
+        let timeLeft = 45;
+        let userAnswers = []; // Store question result summary
+
+        /* ================= 3D CANVAS CARTOON RENDERER (NUSA & RARA) ================= */
+        function drawCharacters() {
+            const canvas = document.getElementById('characterCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            
+            // Set High-DPI Resolution
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width * 2;
+            canvas.height = rect.height * 2;
+            ctx.scale(2, 2);
+
+            const w = rect.width;
+            const h = rect.height;
+
+            // Clear
+            ctx.clearRect(0, 0, w, h);
+
+            // Background Gradient Bubble
+            const bgGrad = ctx.createRadialGradient(w/2, h/2, 10, w/2, h/2, w*0.6);
+            bgGrad.addColorStop(0, '#E8F8F5');
+            bgGrad.addColorStop(1, '#A3E4D7');
+            ctx.fillStyle = bgGrad;
+            ctx.beginPath();
+            ctx.roundRect(0, 0, w, h, 16);
+            ctx.fill();
+
+            // Ground Shadow
+            ctx.fillStyle = 'rgba(39, 174, 96, 0.2)';
+            ctx.beginPath();
+            ctx.ellipse(w * 0.35, h * 0.85, 45, 12, 0, 0, Math.PI * 2);
+            ctx.ellipse(w * 0.65, h * 0.87, 40, 10, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // DRAW NUSA (Left Side - Boy with Green Peci/Cap)
+            const nusaX = w * 0.35;
+            const nusaY = h * 0.52;
+
+            // Nusa Body/Shirt
+            ctx.fillStyle = '#2ECC71'; // Green shirt
+            ctx.beginPath();
+            ctx.roundRect(nusaX - 28, nusaY + 20, 56, 50, 15);
+            ctx.fill();
+
+            // Head 3D Effect Gradient
+            const headGradNusa = ctx.createRadialGradient(nusaX - 5, nusaY - 10, 5, nusaX, nusaY, 30);
+            headGradNusa.addColorStop(0, '#FFDFC4');
+            headGradNusa.addColorStop(1, '#F0B27A');
+            ctx.fillStyle = headGradNusa;
+            ctx.beginPath();
+            ctx.arc(nusaX, nusaY, 30, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Peci / Cap (Green Peci)
+            ctx.fillStyle = '#1E8449';
+            ctx.beginPath();
+            ctx.roundRect(nusaX - 28, nusaY - 38, 56, 22, [8, 8, 2, 2]);
+            ctx.fill();
+
+            // Eyes
+            ctx.fillStyle = '#2C3E50';
+            ctx.beginPath();
+            ctx.arc(nusaX - 10, nusaY - 4, 4, 0, Math.PI * 2);
+            ctx.arc(nusaX + 10, nusaY - 4, 4, 0, Math.PI * 2);
+            ctx.fill();
+            // Eye Highlights
+            ctx.fillStyle = '#FFF';
+            ctx.beginPath();
+            ctx.arc(nusaX - 11, nusaY - 6, 1.5, 0, Math.PI * 2);
+            ctx.arc(nusaX + 9, nusaY - 6, 1.5, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Smile
+            ctx.strokeStyle = '#A04000';
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            ctx.arc(nusaX, nusaY + 6, 8, 0.1 * Math.PI, 0.9 * Math.PI);
+            ctx.stroke();
+
+            // Cheeks
+            ctx.fillStyle = 'rgba(235, 152, 78, 0.4)';
+            ctx.beginPath();
+            ctx.arc(nusaX - 16, nusaY + 4, 5, 0, Math.PI * 2);
+            ctx.arc(nusaX + 16, nusaY + 4, 5, 0, Math.PI * 2);
+            ctx.fill();
+
+
+            // DRAW RARA (Right Side - Girl with Hijab/Pink Accent)
+            const raraX = w * 0.65;
+            const raraY = h * 0.56;
+
+            // Rara Body/Dress
+            ctx.fillStyle = '#F4D03F'; // Yellow Dress
+            ctx.beginPath();
+            ctx.roundRect(raraX - 24, raraY + 18, 48, 45, 12);
+            ctx.fill();
+
+            // Hijab Outer
+            ctx.fillStyle = '#AF7AC5'; // Purple Veil
+            ctx.beginPath();
+            ctx.arc(raraX, raraY - 2, 32, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Face
+            const headGradRara = ctx.createRadialGradient(raraX - 4, raraY - 4, 4, raraX, raraY, 24);
+            headGradRara.addColorStop(0, '#FFE4C4');
+            headGradRara.addColorStop(1, '#F5CBA7');
+            ctx.fillStyle = headGradRara;
+            ctx.beginPath();
+            ctx.arc(raraX, raraY, 22, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Eyes
+            ctx.fillStyle = '#2C3E50';
+            ctx.beginPath();
+            ctx.arc(raraX - 8, raraY - 2, 3.5, 0, Math.PI * 2);
+            ctx.arc(raraX + 8, raraY - 2, 3.5, 0, Math.PI * 2);
+            ctx.fill();
+            // Eye Highlights
+            ctx.fillStyle = '#FFF';
+            ctx.beginPath();
+            ctx.arc(raraX - 9, raraY - 4, 1.2, 0, Math.PI * 2);
+            ctx.arc(raraX + 7, raraY - 4, 1.2, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Smile (Big Cute Smile)
+            ctx.fillStyle = '#E74C3C';
+            ctx.beginPath();
+            ctx.arc(raraX, raraY + 5, 6, 0, Math.PI);
+            ctx.fill();
+
+            // Cute Ribbon / Ribbon Bow
+            ctx.fillStyle = '#EC7063';
+            ctx.beginPath();
+            ctx.arc(raraX - 14, raraY - 22, 6, 0, Math.PI * 2);
+            ctx.arc(raraX - 2, raraY - 22, 6, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#C0392B';
+            ctx.beginPath();
+            ctx.arc(raraX - 8, raraY - 22, 3.5, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        /* Interaction with Characters */
+        document.getElementById('characterCanvas')?.addEventListener('click', () => {
+            sound.playClick();
+            const canvas = document.getElementById('characterCanvas');
+            canvas.style.transform = 'scale(1.05)';
+            setTimeout(() => canvas.style.transform = 'scale(1)', 150);
+        });
+
+        /* ================= NAVIGATION & NAVIGATION LOGIC ================= */
+        function showScreen(screenId) {
+            sound.playClick();
+            ['home-screen', 'quiz-screen', 'result-screen'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    if (id === screenId) {
+                        el.classList.remove('hidden');
+                        el.classList.add('flex');
+                    } else {
+                        el.classList.add('hidden');
+                        el.classList.remove('flex');
+                    }
+                }
+            });
+
+            if (screenId === 'home-screen') {
+                setTimeout(drawCharacters, 50);
+            }
+        }
+
+        function showProfiles() {
+            sound.playClick();
+            document.getElementById('profile-modal').classList.remove('hidden');
+        }
+        function closeProfiles() {
+            sound.playClick();
+            document.getElementById('profile-modal').classList.add('hidden');
+        }
+
+        function showInstructions() {
+            sound.playClick();
+            document.getElementById('instruction-modal').classList.remove('hidden');
+        }
+        function closeInstructions() {
+            sound.playClick();
+            document.getElementById('instruction-modal').classList.add('hidden');
+        }
+
+        /* ================= GAME ENGINE & QUIZ LOGIC ================= */
+        function startGame() {
+            sound.playClick();
+            currentQuestionIndex = 0;
+            score = 0;
+            userAnswers = [];
+            showScreen('quiz-screen');
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const q = quizData[currentQuestionIndex];
+
+            // Update UI Badges
+            document.getElementById('question-badge').innerText = `Soal ${currentQuestionIndex + 1} / ${quizData.length}`;
+            document.getElementById('value-badge').innerText = `Nilai: ${q.value}`;
+            document.getElementById('current-score').innerText = score;
+            document.getElementById('question-text').innerText = q.question;
+
+            // Progress Bar
+            const progress = ((currentQuestionIndex + 1) / quizData.length) * 100;
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+
+            // Load Options
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+
+            q.options.forEach((opt, idx) => {
+                const optionId = `opt-${idx}`;
+                const optHtml = `
+                    <label for="${optionId}" class="cursor-pointer block relative">
+                        <input type="checkbox" id="${optionId}" value="${idx}" class="option-checkbox sr-only">
+                        <div class="option-box flex items-center p-4 rounded-2xl border-2 border-slate-200 hover:border-emerald-300 transition-all bg-white shadow-sm">
+                            <div class="checkbox-icon w-7 h-7 rounded-lg border-2 border-slate-300 flex items-center justify-center mr-3 shrink-0 transition-all text-transparent">
+                                <i class="fa-solid fa-check text-sm"></i>
+                            </div>
+                            <span class="text-sm md:text-base text-slate-700 font-medium leading-relaxed">${opt.text}</span>
+                        </div>
+                    </label>
+                `;
+                container.innerHTML += optHtml;
+            });
+
+            // Start Timer
+            resetTimer();
+        }
+
+        function resetTimer() {
+            clearInterval(timer);
+            timeLeft = 45;
+            updateTimerDisplay();
+            timer = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    checkAnswer(true); // Timeout auto check
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const display = document.getElementById('timer-display');
+            display.innerText = `${timeLeft}s`;
+            if (timeLeft <= 10) {
+                display.className = "w-12 h-12 rounded-full border-4 border-red-500 flex items-center justify-center font-bold text-red-600 text-sm bg-red-50 animate-pulse";
+            } else {
+                display.className = "w-12 h-12 rounded-full border-4 border-amber-400 flex items-center justify-center font-bold text-amber-700 text-sm bg-amber-50 shadow-inner";
+            }
+        }
+
+        function checkAnswer(isTimeout = false) {
+            clearInterval(timer);
+            const currentQ = quizData[currentQuestionIndex];
+            
+            // Get selected checkboxes
+            const selectedNodes = document.querySelectorAll('.option-checkbox:checked');
+            const selectedIndices = Array.from(selectedNodes).map(node => parseInt(node.value));
+
+            // Get correct indices
+            const correctIndices = [];
+            currentQ.options.forEach((opt, idx) => {
+                if (opt.correct) correctIndices.push(idx);
+            });
+
+            // Evaluate complex score
+            let pointsEarned = 0;
+            let status = 'wrong'; // 'perfect', 'partial', 'wrong'
+
+            if (!isTimeout && selectedIndices.length > 0) {
+                const isExactMatch = selectedIndices.length === correctIndices.length &&
+                    selectedIndices.every(val => correctIndices.includes(val));
+
+                if (isExactMatch) {
+                    pointsEarned = 100;
+                    status = 'perfect';
+                } else {
+                    // Check if at least some correct were picked and NO wrong ones were picked
+                    const hasWrongPick = selectedIndices.some(val => !correctIndices.includes(val));
+                    const hasCorrectPick = selectedIndices.some(val => correctIndices.includes(val));
+
+                    if (!hasWrongPick && hasCorrectPick) {
+                        pointsEarned = Math.round((selectedIndices.length / correctIndices.length) * 100);
+                        status = 'partial';
+                    }
+                }
+            }
+
+            score += pointsEarned;
+
+            // Record Answer Analysis
+            userAnswers.push({
+                questionId: currentQ.id,
+                status: status,
+                points: pointsEarned
+            });
+
+            // Show Feedback Modal
+            showFeedbackModal(status, pointsEarned, currentQ.explanation);
+        }
+
+        function showFeedbackModal(status, points, explanation) {
+            const modal = document.getElementById('feedback-modal');
+            const icon = document.getElementById('feedback-icon');
+            const title = document.getElementById('feedback-title');
+            const scoreText = document.getElementById('feedback-score-text');
+            const explanationText = document.getElementById('feedback-explanation');
+
+            explanationText.innerText = explanation;
+
+            if (status === 'perfect') {
+                sound.playCorrect();
+                icon.className = "w-20 h-20 rounded-full mx-auto flex items-center justify-center text-4xl mb-4 shadow-lg bg-emerald-500 text-white";
+                icon.innerHTML = '<i class="fa-solid fa-star"></i>';
+                title.innerText = "Sempurna! Jawaban Tepat Sekali!";
+                title.className = "text-2xl font-bold mb-1 font-heading text-emerald-700";
+                scoreText.innerText = `+${points} Poin (Integritas Sempurna)`;
+                scoreText.className = "text-sm font-bold text-emerald-600 mb-3";
+            } else if (status === 'partial') {
+                sound.playCorrect();
+                icon.className = "w-20 h-20 rounded-full mx-auto flex items-center justify-center text-4xl mb-4 shadow-lg bg-amber-400 text-white";
+                icon.innerHTML = '<i class="fa-solid fa-thumbs-up"></i>';
+                title.innerText = "Hampir Tepat!";
+                title.className = "text-2xl font-bold mb-1 font-heading text-amber-700";
+                scoreText.innerText = `+${points} Poin (Jawaban Sebagian Benar)`;
+                scoreText.className = "text-sm font-bold text-amber-600 mb-3";
+            } else {
+                sound.playWrong();
+                icon.className = "w-20 h-20 rounded-full mx-auto flex items-center justify-center text-4xl mb-4 shadow-lg bg-rose-500 text-white";
+                icon.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+                title.innerText = "Kurang Tepat!";
+                title.className = "text-2xl font-bold mb-1 font-heading text-rose-700";
+                scoreText.innerText = "+0 Poin (Tetap Semangat Belajar!)";
+                scoreText.className = "text-sm font-bold text-rose-600 mb-3";
+            }
+
+            modal.classList.remove('hidden');
+        }
+
+        function nextQuestion() {
+            sound.playClick();
+            document.getElementById('feedback-modal').classList.add('hidden');
+            currentQuestionIndex++;
+
+            if (currentQuestionIndex < quizData.length) {
+                loadQuestion();
+            } else {
+                showFinalReport();
+            }
+        }
+
+        /* ================= SCORECARD & RESULT LOGIC ================= */
+        function showFinalReport() {
+            showScreen('result-screen');
+            sound.playWin();
+
+            // Calculate stats
+            const perfectCount = userAnswers.filter(a => a.status === 'perfect').length;
+            const partialCount = userAnswers.filter(a => a.status === 'partial').length;
+            const maxPossible = quizData.length * 100;
+            const percentage = Math.round((score / maxPossible) * 100);
+
+            document.getElementById('final-score').innerText = score;
+            document.getElementById('correct-count').innerText = `${perfectCount} Soal`;
+            document.getElementById('partial-count').innerText = `${partialCount} Soal`;
+            document.getElementById('integrity-percentage').innerText = `${percentage}%`;
+
+            // Predicate
+            const badge = document.getElementById('predicate-badge');
+            if (percentage >= 85) {
+                badge.innerText = "🏆 Pahlawan Utama Anti-Korupsi Cilik";
+                badge.className = "mt-2 inline-block bg-amber-300 text-amber-900 px-4 py-1.5 rounded-full text-sm font-bold shadow-sm";
+            } else if (percentage >= 60) {
+                badge.innerText = "⭐ Duta Anak Jujur & Disiplin";
+                badge.className = "mt-2 inline-block bg-teal-200 text-teal-900 px-4 py-1.5 rounded-full text-sm font-bold shadow-sm";
+            } else {
+                badge.innerText = "🌱 Sahabat Belajar Integritas";
+                badge.className = "mt-2 inline-block bg-slate-200 text-slate-800 px-4 py-1.5 rounded-full text-sm font-bold shadow-sm";
+            }
+
+            // Confetti Trigger
+            if (typeof confetti === 'function' && percentage >= 50) {
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+            }
+        }
+
+        /* Window Load Initializer */
+        window.onload = function() {
+            drawCharacters();
+            window.addEventListener('resize', drawCharacters);
+        };
+    </script>
+</body>
+</html>
